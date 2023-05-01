@@ -38,7 +38,9 @@ public class DeclarativesImpl extends CobolDivisionElementImpl implements Declar
 			result = new DeclarativeImpl(programUnit, ctx);
 
 			result.addSectionHeader(ctx.procedureSectionHeader());
-			result.addUseStatement(ctx.useStatement());
+			if (ctx.useStatement() != null) {
+				result.addUseStatement(ctx.useStatement());
+			}
 
 			declaratives.add(result);
 			registerASGElement(result);

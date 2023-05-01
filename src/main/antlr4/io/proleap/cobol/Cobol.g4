@@ -1131,7 +1131,7 @@ procedureDeclaratives
    ;
 
 procedureDeclarative
-   : procedureSectionHeader DOT_FS useStatement DOT_FS paragraphs
+   : procedureSectionHeader (DOT_FS useStatement)? DOT_FS paragraphs
    ;
 
 procedureSectionHeader
