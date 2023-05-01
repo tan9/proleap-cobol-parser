@@ -721,7 +721,11 @@ reportDescription
    ;
 
 reportDescriptionEntry
-   : RD reportName reportDescriptionGlobalClause? (reportDescriptionPageLimitClause reportDescriptionHeadingClause? reportDescriptionFirstDetailClause? reportDescriptionLastDetailClause? reportDescriptionFootingClause?)? DOT_FS
+   : RD reportName reportDescriptionGlobalClause? (reportDescriptionPageLimitClause reportDescriptionHeadingClause? reportDescriptionFirstDetailClause? reportDescriptionLastDetailClause? reportDescriptionFootingClause? reportDescriptionControlClause?)? DOT_FS
+   ;
+
+reportDescriptionControlClause
+   : (CONTROL IS? | CONTROLS ARE?) (dataName* | FINAL dataName*)
    ;
 
 reportDescriptionGlobalClause
@@ -817,7 +821,7 @@ reportGroupSignClause
    ;
 
 reportGroupSourceClause
-   : SOURCE IS? identifier
+   : SOURCE IS? (identifier | literal)
    ;
 
 reportGroupSumClause
@@ -957,7 +961,7 @@ dataDescriptionEntryFormat2
    ;
 
 dataDescriptionEntryFormat3
-   : LEVEL_NUMBER_88 conditionName dataValueClause DOT_FS
+   : LEVEL_NUMBER_88 conditionName dataValueClause dataWhenSetToFalseClause? DOT_FS
    ;
 
 dataDescriptionEntryExecSql
@@ -1014,6 +1018,10 @@ dataOccursIndexed
 
 dataPictureClause
    : (PICTURE | PIC) IS? pictureString
+   ;
+
+dataWhenSetToFalseClause
+   : (WHEN? SET? TO? FALSE IS?) literal
    ;
 
 pictureString
@@ -1161,7 +1169,7 @@ sentence
    ;
 
 statement
-   : acceptStatement | addStatement | alterStatement | callStatement | cancelStatement | closeStatement | computeStatement | continueStatement | deleteStatement | disableStatement | displayStatement | divideStatement | enableStatement | entryStatement | evaluateStatement | exhibitStatement | execCicsStatement | execSqlStatement | execSqlImsStatement | exitStatement | generateStatement | gobackStatement | goToStatement | ifStatement | initializeStatement | initiateStatement | inspectStatement | mergeStatement | moveStatement | multiplyStatement | nextSentenceStatement | openStatement | performStatement | purgeStatement | readStatement | receiveStatement | releaseStatement | returnStatement | rewriteStatement | searchStatement | sendStatement | setStatement | sortStatement | startStatement | stopStatement | stringStatement | subtractStatement | terminateStatement | unstringStatement | writeStatement
+   : acceptStatement | acceptStatementMf | addStatement | alterStatement | callStatement | cancelStatement | closeStatement | computeStatement | continueStatement | deleteStatement | disableStatement | displayStatement | displayStatementMf | divideStatement | enableStatement | entryStatement | evaluateStatement | exhibitStatement | execCicsStatement | execSqlStatement | execSqlImsStatement | exitStatement | generateStatement | gobackStatement | goToStatement | ifStatement | initializeStatement | initiateStatement | inspectStatement | mergeStatement | moveStatement | multiplyStatement | nextSentenceStatement | openStatement | performStatement | purgeStatement | readStatement | receiveStatement | releaseStatement | returnStatement | rewriteStatement | searchStatement | sendStatement | setStatement | sortStatement | startStatement | stopStatement | stringStatement | subtractStatement | terminateStatement | unstringStatement | writeStatement
    ;
 
 // accept statement
@@ -1184,6 +1192,50 @@ acceptFromEscapeKeyStatement
 
 acceptMessageCountStatement
    : MESSAGE? COUNT
+   ;
+
+acceptStatementMf
+   : acceptStatementMfFormat3 | acceptStatementMfFormat4 | acceptStatementMfFormat5
+   ;
+
+acceptStatementMfFormat3
+   : ACCEPT identifier FROM (LINE NUMBER | USER NAME | ESCAPE KEY | EXCEPTION STATUS) END_ACCEPT?
+   ;
+
+acceptStatementMfFormat4
+   : ACCEPT screenName (acceptAtLineColumn | acceptAtOperand)? acceptOnException? acceptNotOnException? END_ACCEPT?
+   ;
+
+acceptStatementMfFormat5
+   : ACCEPT identifier acceptAtLineColumn? acceptFromCrt? acceptModeBlock? acceptWith? acceptOnException? acceptNotOnException? END_ACCEPT?
+   ;
+
+acceptAtLineColumn
+   : AT? (LINE NUMBER? (identifier | integerLiteral))? ((COLUMN | COL) NUMBER? (identifier | integerLiteral))?
+   ;
+
+acceptAtOperand
+   : AT (identifier | integerLiteral)
+   ;
+
+acceptFromCrt
+   : FROM CRT
+   ;
+
+acceptModeBlock
+   : MODE IS? BLOCK
+   ;
+
+acceptOnException
+   : ON? (EXCEPTION | ESCAPE) statement
+   ;
+
+acceptNotOnException
+   : NOT ON? (EXCEPTION | ESCAPE) statement
+   ;
+
+acceptWith
+   : WITH ( LEFT_JUSTIFY | RIGHT_JUSTIFY | SPACE_FILL | TRAILING_SIGN | UPDATE | UPPER | LOWER | ZERO_FILL)
    ;
 
 // add statement
@@ -1374,6 +1426,34 @@ displayUpon
 
 displayWith
    : WITH? NO ADVANCING
+   ;
+
+displayStatementMf
+   : displayStatementMfFormat2 | displayStatementMfFormat3
+   ;
+
+displayStatementMfFormat2
+   : DISPLAY screenName (displayAtLineColumn | displayAt)? END_DISPLAY?
+   ;
+
+displayStatementMfFormat3
+   : DISPLAY (displayOperand+ (displayAtLineColumn | displayAt)? displayUponCrt? displayModeBlock? displayWithFormat3?)+ END_DISPLAY?
+   ;
+
+displayAtLineColumn
+   : AT? (LINE NUMBER? (identifier | literal))? ((COLUMN | COL) NUMBER? (identifier | literal))?
+   ;
+
+displayUponCrt
+   : UPON (CRT | CRT_UNDER)
+   ;
+
+displayModeBlock
+   : MODE IS? BLOCK
+   ;
+
+displayWithFormat3
+   : WITH ((BELL | BEEP) | BLINK | GRID | ERASE (EOL | EOS) | HIGHLIGHT | LOWLIGHT | OVERLINE | REVERSE_VIDEO | SIZE IS? (identifier | integerLiteral) | UNDERLINE | (FOREGROUND_COLOR | FOREGROUND_COLOUR) IS? integerLiteral | (BACKGROUND_COLOR | BACKGROUND_COLOUR) IS? integerLiteral | (FOREGROUND_COLOR | FOREGROUND_COLOUR) IS? integerLiteral | (BACKGROUND_COLOR | BACKGROUND_COLOUR) IS? integerLiteral | CONTROL IS? identifier | integerLiteral | BLANK (SCREEN | LINE))+
    ;
 
 // divide statement
@@ -2570,7 +2650,7 @@ cobolWord
    | FOREGROUND_COLOR | FOREGROUND_COLOUR | FULL | FUNCTIONNAME | FUNCTION_POINTER
    | GRID
    | HIGHLIGHT
-   | IMPLICIT | IMPORT | INTEGER
+   | ID | IMPLICIT | IMPORT | INTEGER
    | KEPT | KEYBOARD
    | LANGUAGE | LB | LD | LEFTLINE | LENGTH_CHECK | LIBACCESS | LIBPARAMETER | LIBRARY | LIST | LOCAL | LONG_DATE | LONG_TIME | LOWER | LOWLIGHT
    | MMDDYYYY
@@ -2581,7 +2661,7 @@ cobolWord
    | SAVE | SECURE | SHARED | SHAREDBYALL | SHAREDBYRUNUNIT | SHARING | SHORT_DATE | SQL | SYMBOL
    | TASK | THREAD | THREAD_LOCAL | TIMER | TODAYS_DATE | TODAYS_NAME | TRUNCATED | TYPEDEF
    | UNDERLINE
-   | VIRTUAL
+   | VARYING | VIRTUAL
    | WAIT
    | YEAR | YYYYMMDD | YYYYDDD
    | ZERO_FILL
@@ -2744,6 +2824,8 @@ COPY : C O P Y;
 CORR : C O R R;
 CORRESPONDING : C O R R E S P O N D I N G;
 COUNT : C O U N T;
+CRT : C R T;
+CRT_UNDER : C R T MINUSCHAR U N D E R;
 CRUNCH : C R U N C H;
 CURRENCY : C U R R E N C Y;
 CURSOR : C U R S O R;
@@ -2909,6 +2991,7 @@ LB : L B;
 LD : L D;
 LEADING : L E A D I N G;
 LEFT : L E F T;
+LEFT_JUSTIFY : L E F T MINUSCHAR J U S T I F Y;
 LEFTLINE : L E F T L I N E;
 LENGTH : L E N G T H;
 LENGTH_CHECK : L E N G T H MINUSCHAR C H E C K;
@@ -2944,6 +3027,7 @@ MORE_LABELS : M O R E MINUSCHAR L A B E L S;
 MOVE : M O V E;
 MULTIPLE : M U L T I P L E;
 MULTIPLY : M U L T I P L Y;
+NAME: N A M E;
 NAMED : N A M E D;
 NATIONAL : N A T I O N A L;
 NATIONAL_EDITED : N A T I O N A L MINUSCHAR E D I T E D;
@@ -3053,6 +3137,7 @@ REWRITE : R E W R I T E;
 RF : R F;
 RH : R H;
 RIGHT : R I G H T;
+RIGHT_JUSTIFY : R I G H T MINUSCHAR J U S T I F I Y;
 ROUNDED : R O U N D E D;
 RUN : R U N;
 SAME : S A M E;
@@ -3092,6 +3177,7 @@ SORT_RETURN : S O R T MINUSCHAR R E T U R N;
 SOURCE : S O U R C E;
 SOURCE_COMPUTER : S O U R C E MINUSCHAR C O M P U T E R;
 SPACE : S P A C E;
+SPACE_FILL : S P A C E MINUSCHAR F I L L;
 SPACES : S P A C E S;
 SPECIAL_NAMES : S P E C I A L MINUSCHAR N A M E S;
 SQL : S Q L;
@@ -3136,6 +3222,7 @@ TODAYS_DATE : T O D A Y S MINUSCHAR D A T E;
 TODAYS_NAME : T O D A Y S MINUSCHAR N A M E;
 TOP : T O P;
 TRAILING : T R A I L I N G;
+TRAILING_SIGN : T R A I L I N G MINUSCHAR S I G N;
 TRUE : T R U E;
 TRUNCATED : T R U N C A T E D;
 TYPE : T Y P E;
@@ -3145,9 +3232,12 @@ UNIT : U N I T;
 UNSTRING : U N S T R I N G;
 UNTIL : U N T I L;
 UP : U P;
+UPDATE : U P D A T E;
+UPPER : U P P E R;
 UPON : U P O N;
 USAGE : U S A G E;
 USE : U S E;
+USER : U S E R;
 USING : U S I N G;
 VALUE : V A L U E;
 VALUES : V A L U E S;
