@@ -1453,7 +1453,7 @@ displayModeBlock
    ;
 
 displayWithFormat3
-   : WITH ((BELL | BEEP) | BLINK | GRID | ERASE (EOL | EOS) | HIGHLIGHT | LOWLIGHT | OVERLINE | REVERSE_VIDEO | SIZE IS? (identifier | integerLiteral) | UNDERLINE | (FOREGROUND_COLOR | FOREGROUND_COLOUR) IS? integerLiteral | (BACKGROUND_COLOR | BACKGROUND_COLOUR) IS? integerLiteral | (FOREGROUND_COLOR | FOREGROUND_COLOUR) IS? integerLiteral | (BACKGROUND_COLOR | BACKGROUND_COLOUR) IS? integerLiteral | CONTROL IS? identifier | integerLiteral | BLANK (SCREEN | LINE))+
+   : WITH ((BELL | BEEP) | BLINK | GRID | ERASE (EOL | EOS)? | HIGHLIGHT | LOWLIGHT | OVERLINE | REVERSE_VIDEO | SIZE IS? (identifier | integerLiteral) | UNDERLINE | (FOREGROUND_COLOR | FOREGROUND_COLOUR) IS? integerLiteral | (BACKGROUND_COLOR | BACKGROUND_COLOUR) IS? integerLiteral | (FOREGROUND_COLOR | FOREGROUND_COLOUR) IS? integerLiteral | (BACKGROUND_COLOR | BACKGROUND_COLOUR) IS? integerLiteral | CONTROL IS? identifier | integerLiteral | BLANK (SCREEN | LINE))+
    ;
 
 // divide statement
