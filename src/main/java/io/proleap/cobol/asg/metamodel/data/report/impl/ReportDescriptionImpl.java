@@ -340,32 +340,44 @@ public class ReportDescriptionImpl extends CobolDivisionElementImpl implements R
 			/*
 			 * line number
 			 */
-			if (ctx.reportGroupLineNumberClause() != null) {
-				final ReportGroupLineNumberClauseContext lineNumberClauseContext = ctx.reportGroupLineNumberClause();
+			if (ctx.reportGroupLineNumberClause() != null && !ctx.reportGroupLineNumberClause().isEmpty()) {
+				if (ctx.reportGroupLineNumberClause().size() > 1) {
+					throw new IllegalArgumentException("ReportGroupDescriptionEntryFormat1Context has more than one line number clause");
+				}
+				final ReportGroupLineNumberClauseContext lineNumberClauseContext = ctx.reportGroupLineNumberClause().iterator().next();
 				result.addLineNumberClause(lineNumberClauseContext);
 			}
 
 			/*
 			 * next group
 			 */
-			if (ctx.reportGroupNextGroupClause() != null) {
-				final ReportGroupNextGroupClauseContext nextGroupClause = ctx.reportGroupNextGroupClause();
+			if (ctx.reportGroupNextGroupClause() != null && !ctx.reportGroupNextGroupClause().isEmpty()) {
+				if (ctx.reportGroupNextGroupClause().size() > 1) {
+					throw new IllegalArgumentException("ReportGroupDescriptionEntryFormat1Context has more than one next group clause");
+				}
+				final ReportGroupNextGroupClauseContext nextGroupClause = ctx.reportGroupNextGroupClause().iterator().next();
 				result.addNextGroupClause(nextGroupClause);
 			}
 
 			/*
 			 * type
 			 */
-			if (ctx.reportGroupTypeClause() != null) {
-				final ReportGroupTypeClauseContext typeClause = ctx.reportGroupTypeClause();
+			if (ctx.reportGroupTypeClause() != null && !ctx.reportGroupTypeClause().isEmpty()) {
+				if (ctx.reportGroupTypeClause().size() > 1) {
+					throw new IllegalArgumentException("ReportGroupDescriptionEntryFormat1Context has more than one type clause");
+				}
+				final ReportGroupTypeClauseContext typeClause = ctx.reportGroupTypeClause().iterator().next();
 				result.addTypeClause(typeClause);
 			}
 
 			/*
 			 * usage
 			 */
-			if (ctx.reportGroupUsageClause() != null) {
-				final ReportGroupUsageClauseContext groupUsageClause = ctx.reportGroupUsageClause();
+			if (ctx.reportGroupUsageClause() != null && !ctx.reportGroupUsageClause().isEmpty()) {
+				if (ctx.reportGroupUsageClause().size() > 1) {
+					throw new IllegalArgumentException("ReportGroupDescriptionEntryFormat1Context has more than one usage clause");
+				}
+				final ReportGroupUsageClauseContext groupUsageClause = ctx.reportGroupUsageClause().iterator().next();
 				result.addGroupUsageClause(groupUsageClause);
 			}
 
@@ -463,7 +475,7 @@ public class ReportDescriptionImpl extends CobolDivisionElementImpl implements R
 	}
 
 	protected void groupReportGroupDescriptionEntry(final ReportGroupDescriptionEntry lastReportGroupDescriptionEntry,
-			final ReportGroupDescriptionEntry reportGroupDescriptionEntry) {
+													final ReportGroupDescriptionEntry reportGroupDescriptionEntry) {
 		final Integer lastLevelNumber = lastReportGroupDescriptionEntry.getLevelNumber();
 		final Integer levelNumber = reportGroupDescriptionEntry.getLevelNumber();
 

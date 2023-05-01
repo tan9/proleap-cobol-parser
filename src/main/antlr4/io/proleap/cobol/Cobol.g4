@@ -753,7 +753,7 @@ reportGroupDescriptionEntry
    ;
 
 reportGroupDescriptionEntryFormat1
-   : integerLiteral dataName reportGroupLineNumberClause? reportGroupNextGroupClause? reportGroupTypeClause reportGroupUsageClause? DOT_FS
+   : integerLiteral dataName (reportGroupLineNumberClause | reportGroupNextGroupClause | reportGroupTypeClause | reportGroupUsageClause)* DOT_FS
    ;
 
 reportGroupDescriptionEntryFormat2
